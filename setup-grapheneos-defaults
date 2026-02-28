@@ -1,0 +1,49 @@
+#!/bin/env bash
+set -euo pipefail
+
+AUTO_REBOOT_HOURS=8
+BLUETOOTH_AUTO_SHUTOFF_MINUTES=5
+
+# Download latest APK of Signal
+echo "Downloading Signal APK..."
+curl -s https://api.github.com/repos/signalapp/Signal-Android/releases/latest | grep "browser_download_url.*apk" | cut -d : -f 2,3 | tr -d \" | wget -qi - -O signal.apk
+
+# Download latest APK of Neo Store
+echo "Downloading Neo Store APK..."
+curl -s https://api.github.com/repos/NeoApplications/Neo-Store/releases/latest | grep "browser_download_url.*apk" | cut -d : -f 2,3 | tr -d \" | wget -qi - -O neostore.apk
+
+# Download latest APK of Futo Keyboard
+echo "Downloading Futo Keyboard APK..."
+curl -s https://api.github.com/repos/futo-org/android-keyboard/releases/latest | grep "browser_download_url.*apk" | cut -d : -f 2,3 | tr -d \" | wget -qi - -O futo.apk
+
+adb start-server
+adb devices
+
+adb install signal.apk
+echo "Installed Signal."
+adb install -g neostore.apk
+echo "Installed Neo Store"
+adb install futo.apk
+echo "Installed Futo Keyboard"
+
+adb shell settings put system status_bar_show_battery_percent 1
+echo "Turned on battery percentage in status bar."
+
+adb shell settings put global settings_reboot_after_timeout "$((AUTO_REBOOT_HOURS*3600000))"
+echo "Auto-reboot timer set to $AUTO_REBOOT_HOURS hours."
+
+adb shell settings put global bluetooth_off_timeout "$((BLUETOOTH_AUTO_SHUTOFF_MINUTES*60000))"
+echo "Bluetooth auto-shutoff timer set to $BLUETOOTH_AUTO_SHUTOFF_MINUTES minutes."
+
+adb shell settings put global network_location 2
+echo "Network location provider set to GrapheneOS Proxy."
+
+adb shell settings put global geocoder 2
+echo "Geocoder set to GrapheneOS Proxy."
+
+# Disable developer settings and ADB after setup is complete
+adb shell settings put global development_settings_enabled 0
+adb shell settings put global adb_enabled 0 || true
+
+# Remove APKs
+rm ./*.apk
