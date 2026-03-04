@@ -5,25 +5,31 @@ AUTO_REBOOT_HOURS=8
 BLUETOOTH_AUTO_SHUTOFF_MINUTES=5
 
 # Download latest APK of Signal
-echo "Downloading Signal APK..."
-curl -s https://api.github.com/repos/signalapp/Signal-Android/releases/latest | grep "browser_download_url.*apk" | cut -d : -f 2,3 | tr -d \" | wget -qi - -O signal.apk
+if [ ! -f /tmp/signal.apk ]; then
+	echo "Downloading Signal APK..."
+	curl -s https://api.github.com/repos/signalapp/Signal-Android/releases/latest | grep 	"browser_download_url.*apk" | cut -d : -f 2,3 | tr -d \" | wget -qi - -O /tmp/signal.apk
+fi
 
 # Download latest APK of Neo Store
-echo "Downloading Neo Store APK..."
-curl -s https://api.github.com/repos/NeoApplications/Neo-Store/releases/latest | grep "browser_download_url.*apk" | cut -d : -f 2,3 | tr -d \" | wget -qi - -O neostore.apk
+if [ ! -f /tmp/neostore.apk ]; then
+	echo "Downloading Neo Store APK..."
+	curl -s https://api.github.com/repos/NeoApplications/Neo-Store/releases/latest | grep "browser_download_url.*apk" | cut -d : -f 2,3 | tr -d \" | wget -qi - -O /tmp/neostore.apk
+fi
 
 # Download latest APK of Futo Keyboard
-echo "Downloading Futo Keyboard APK..."
-curl -s https://api.github.com/repos/futo-org/android-keyboard/releases/latest | grep "browser_download_url.*apk" | cut -d : -f 2,3 | tr -d \" | wget -qi - -O futo.apk
+if [ ! -f /tmp/futo.apk ]; then
+	echo "Downloading Futo Keyboard APK..."
+	curl -s https://api.github.com/repos/futo-org/android-keyboard/releases/latest | grep "browser_download_url.*apk" | cut -d : -f 2,3 | tr -d \" | wget -qi - -O /tmp/futo.apk
+fi
 
 adb start-server
 adb devices
 
-adb install signal.apk
+adb install /tmp/signal.apk
 echo "Installed Signal."
-adb install -g neostore.apk
+adb install -g /tmp/neostore.apk
 echo "Installed Neo Store"
-adb install futo.apk
+adb install /tmp/futo.apk
 echo "Installed Futo Keyboard"
 
 adb shell settings put system status_bar_show_battery_percent 1
@@ -44,6 +50,3 @@ echo "Geocoder set to GrapheneOS Proxy."
 # Disable developer settings and ADB after setup is complete
 adb shell settings put global development_settings_enabled 0
 adb shell settings put global adb_enabled 0 || true
-
-# Remove APKs
-rm ./*.apk
