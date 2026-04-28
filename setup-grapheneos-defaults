@@ -25,11 +25,11 @@ fi
 adb start-server
 adb devices
 
-adb install /tmp/signal.apk
-echo "Installed Signal."
-adb install -g /tmp/neostore.apk
+adb install -g -i "com.machiav3lli.fdroid" /tmp/neostore.apk
 echo "Installed Neo Store"
-adb install /tmp/futo.apk
+adb install -i "com.machiav3lli.fdroid" /tmp/signal.apk
+echo "Installed Signal."
+adb install -i "com.machiav3lli.fdroid" /tmp/futo.apk
 echo "Installed Futo Keyboard"
 
 adb shell settings put system status_bar_show_battery_percent 1
