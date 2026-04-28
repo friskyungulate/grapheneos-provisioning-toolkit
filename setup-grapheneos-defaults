@@ -4,7 +4,7 @@ set -euo pipefail
 AUTO_REBOOT_HOURS=8
 BLUETOOTH_AUTO_SHUTOFF_MINUTES=5
 
-# Fetch and parse latest Tor Browser version and construct download URL
+# Download latest APK of Tor Browser
 if [ ! -f /tmp/torbrowser.apk ]; then
 	echo "Downloading Tor Browser APK..."
 	TOR_BROWSER_VERSION="$(curl -s https://aus1.torproject.org/torbrowser/update_3/release/download-android-aarch64.json | jq -r '.version')"
