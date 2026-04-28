@@ -4,6 +4,13 @@ set -euo pipefail
 AUTO_REBOOT_HOURS=8
 BLUETOOTH_AUTO_SHUTOFF_MINUTES=5
 
+# Fetch and parse latest Tor Browser version and construct download URL
+if [ ! -f /tmp/torbrowser.apk ]; then
+	echo "Downloading Tor Browser APK..."
+	TOR_BROWSER_VERSION="$(curl -s https://aus1.torproject.org/torbrowser/update_3/release/download-android-aarch64.json | jq -r '.version')"
+	curl -s -o /tmp/torbrowser.apk https://dist.torproject.org/torbrowser/"$TOR_BROWSER_VERSION"/tor-browser-android-aarch64-"$TOR_BROWSER_VERSION".apk
+fi
+
 # Download latest APK of Signal
 if [ ! -f /tmp/signal.apk ]; then
 	echo "Downloading Signal APK..."
@@ -31,6 +38,8 @@ adb install -i "com.machiav3lli.fdroid" /tmp/signal.apk
 echo "Installed Signal."
 adb install -i "com.machiav3lli.fdroid" /tmp/futo.apk
 echo "Installed Futo Keyboard"
+adb install -i "com.machiav3lli.fdroid" /tmp/torbrowser.apk
+echo "Installed Tor Browser"
 
 adb shell settings put system status_bar_show_battery_percent 1
 echo "Turned on battery percentage in status bar."
