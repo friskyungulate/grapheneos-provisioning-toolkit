@@ -14,19 +14,19 @@ fi
 # Download latest APK of Signal
 if [ ! -f /tmp/signal.apk ]; then
 	echo "Downloading Signal APK..."
-	curl -s https://api.github.com/repos/signalapp/Signal-Android/releases/latest | grep "browser_download_url.*apk" | cut -d : -f 2,3 | tr -d \" | wget -qi - -O /tmp/signal.apk
+	curl -s https://api.github.com/repos/signalapp/Signal-Android/releases/latest | jq -r '.assets.[0].browser_download_url' | xargs -n 1 curl -s -o /tmp/signal.apk -L
 fi
 
 # Download latest APK of Neo Store
 if [ ! -f /tmp/neostore.apk ]; then
 	echo "Downloading Neo Store APK..."
-	curl -s https://api.github.com/repos/NeoApplications/Neo-Store/releases/latest | grep "browser_download_url.*apk" | cut -d : -f 2,3 | tr -d \" | wget -qi - -O /tmp/neostore.apk
+	curl -s https://api.github.com/repos/NeoApplications/Neo-Store/releases/latest | jq -r '.assets.[0].browser_download_url' | xargs -n 1 curl -s -o /tmp/neostore.apk -L
 fi
 
 # Download latest APK of Futo Keyboard
 if [ ! -f /tmp/futo.apk ]; then
 	echo "Downloading Futo Keyboard APK..."
-	curl -s https://api.github.com/repos/futo-org/android-keyboard/releases/latest | grep "browser_download_url.*apk" | cut -d : -f 2,3 | tr -d \" | wget -qi - -O /tmp/futo.apk
+	curl -s https://api.github.com/repos/futo-org/android-keyboard/releases/latest | jq -r '.assets.[0].browser_download_url' | xargs -n 1 curl -s -o /tmp/futo.apk -L
 fi
 
 adb start-server

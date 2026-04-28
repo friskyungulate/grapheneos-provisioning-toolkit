@@ -6,7 +6,7 @@ This is a toolkit to automate the process of setting up a new GrapheneOS device 
     - Windows is not supported at this time. Use a real OS :^)
 - [Android SDK Platform Tools](https://developer.android.com/tools/releases/platform-tools) installed
     - For Linux: [android-udev-rules](https://github.com/M0Rf30/android-udev-rules) installed
-- `jq`, `curl` and `wget` installed
+- `jq` and `curl` installed
 
 ## How to use this toolkit
 1. Enable developer options and ADB
