@@ -56,6 +56,16 @@ echo "Network location provider set to GrapheneOS Proxy."
 adb shell settings put global geocoder 2
 echo "Geocoder set to GrapheneOS Proxy."
 
+adb shell ime enable org.futo.inputmethod.latin/.LatinIME
+adb shell ime set org.futo.inputmethod.latin/.LatinIME
+echo "Set FUTO Keyboard as default keyboard."
+
+adb shell appops set com.machiav3lli.fdroid REQUEST_INSTALL_PACKAGES allow
+echo "Granted install apps permission to Neo Store."
+
+adb shell dumpsys deviceidle whitelist +com.machiav3lli.fdroid
+echo "Disabled battery optimization for Neo Store."
+
 # Disable developer settings and ADB after setup is complete
 adb shell settings put global development_settings_enabled 0
 adb shell settings put global adb_enabled 0 || true
